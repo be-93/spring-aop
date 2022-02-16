@@ -8,6 +8,10 @@ import org.springframework.core.annotation.Order;
 
 @Slf4j
 public class AspectV5Order {
+    /**
+     * Advisor 은 기본적으로 순서를 보장하지 않음.
+     * Aspect 의 순서를 보장 받으려면 다중 Aspect 가 존재할땐 클래스로 분리해야한다.
+     * */
 
     @Aspect
     @Order(2)
