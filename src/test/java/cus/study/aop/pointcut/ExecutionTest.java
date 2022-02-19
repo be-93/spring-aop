@@ -33,4 +33,115 @@ public class ExecutionTest {
 
         assertThat(pointcut.matches(helloMethod, MemberServiceImpl.class)).isTrue();
     }
+
+    @Test
+    public void allMatch(){
+        pointcut.setExpression("execution(* *(..))");
+
+        assertThat(pointcut.matches(helloMethod, MemberServiceImpl.class)).isTrue();
+    }
+
+    @Test
+    public void nameMatch(){
+        pointcut.setExpression("execution(* hello(..))");
+
+        assertThat(pointcut.matches(helloMethod, MemberServiceImpl.class)).isTrue();
+    }
+
+    @Test
+    public void patternMatch(){
+        pointcut.setExpression("execution(* hel*(..))");
+
+        assertThat(pointcut.matches(helloMethod, MemberServiceImpl.class)).isTrue();
+    }
+
+    @Test
+    public void patternMatch2(){
+        pointcut.setExpression("execution(* *el*(..))");
+
+        assertThat(pointcut.matches(helloMethod, MemberServiceImpl.class)).isTrue();
+    }
+
+    @Test
+    public void packageExactMatch(){
+        pointcut.setExpression("execution(* cus.study.aop.member.MemberServiceImpl.hello(..))");
+
+        assertThat(pointcut.matches(helloMethod, MemberServiceImpl.class)).isTrue();
+    }
+
+    @Test
+    public void packageExactMatch2(){
+        pointcut.setExpression("execution(* cus.study.aop.member.*.*(..))");
+
+        assertThat(pointcut.matches(helloMethod, MemberServiceImpl.class)).isTrue();
+    }
+
+    @Test
+    public void packageExactMatch3(){
+        pointcut.setExpression("execution(* cus.study.aop.member..*.*(..))");
+
+        assertThat(pointcut.matches(helloMethod, MemberServiceImpl.class)).isTrue();
+    }
+
+    @Test
+    public void typeExactMatch(){
+        pointcut.setExpression("execution(* cus.study.aop.member.MemberServiceImpl.*(..))");
+
+        assertThat(pointcut.matches(helloMethod, MemberServiceImpl.class)).isTrue();
+    }
+
+    @Test
+    public void superTypeMatch(){
+        pointcut.setExpression("execution(* cus.study.aop.member.MemberService.*(..))");
+
+        assertThat(pointcut.matches(helloMethod, MemberServiceImpl.class)).isTrue();
+    }
+
+    @Test
+    public void typeMatchInternal() throws NoSuchMethodException {
+        pointcut.setExpression("execution(* cus.study.aop.member.MemberServiceImpl.*(..))");
+
+        Method internal = MemberServiceImpl.class.getMethod("internal", String.class);
+
+        assertThat(pointcut.matches(internal, MemberServiceImpl.class)).isTrue();
+    }
+
+    @Test
+    public void typeMatchNoSuperTypeMethodFalse() throws NoSuchMethodException {
+        pointcut.setExpression("execution(* cus.study.aop.member.MemberService.*(..))");
+
+        Method internal = MemberServiceImpl.class.getMethod("internal", String.class);
+
+        assertThat(pointcut.matches(internal, MemberServiceImpl.class)).isFalse();
+    }
+
+    @Test
+    public void argsMatch(){
+        pointcut.setExpression("execution(* *(String))");
+        assertThat(pointcut.matches(helloMethod, MemberServiceImpl.class)).isTrue();
+    }
+
+    @Test
+    public void argsMatchNoArgs(){
+        pointcut.setExpression("execution(* *())");
+        assertThat(pointcut.matches(helloMethod, MemberServiceImpl.class)).isFalse();
+    }
+
+    @Test
+    public void argsMatchOnlyOneArgs(){
+        pointcut.setExpression("execution(* *(*))");
+        assertThat(pointcut.matches(helloMethod, MemberServiceImpl.class)).isTrue();
+    }
+
+    @Test
+    public void argsMatchAllArgs(){
+        pointcut.setExpression("execution(* *(..))");
+        assertThat(pointcut.matches(helloMethod, MemberServiceImpl.class)).isTrue();
+    }
+
+    @Test
+    public void argsMatchComplexArgs(){
+        pointcut.setExpression("execution(* *(String, ..))");
+        assertThat(pointcut.matches(helloMethod, MemberServiceImpl.class)).isTrue();
+    }
 }
